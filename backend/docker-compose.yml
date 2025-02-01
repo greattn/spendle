@@ -12,12 +12,14 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    environment:
-      DATABASE_URL: mysql2://root:password@db:3306/spended_dev
+    restart: always
+    tty: true
 
   db:
     image: mysql:8
     container_name: spendle_db
+    env_file:
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: spendle_dev
