@@ -7,6 +7,15 @@ const nextConfig: NextConfig = {
     unoptimized: false,
   },
   sassOptions: {},
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/dashboard",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

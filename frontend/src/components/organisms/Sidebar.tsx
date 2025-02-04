@@ -1,4 +1,5 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Home, HandCoins, Settings } from "lucide-react";
+import Link from "next/link";
 
 import {
   Sidebar as SidebarUI,
@@ -21,7 +22,7 @@ const items = [
   {
     title: "Transactions",
     url: "/transactions",
-    icon: Inbox,
+    icon: HandCoins,
   },
   {
     title: "Settings",
@@ -35,18 +36,23 @@ const Sidebar: React.FC = () => {
     <SidebarUI>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-2xl font-bold">
-            Spendle
+          <SidebarGroupLabel className="text-4xl font-bold h-16">
+            <Link
+              href="/dashboard"
+              className={`hover:cursor-pointer w-full text-primary`}
+            >
+              Spendle
+            </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

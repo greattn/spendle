@@ -3,7 +3,7 @@
 import React from "react";
 import Header from "../../components/organisms/Header";
 import Sidebar from "../organisms/Sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const Dashboard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -11,10 +11,9 @@ const Dashboard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <div className="dashboard-content">
         <SidebarProvider>
           <Sidebar />
-          <main>
+          <main className="main-content flex-1">
             <Header />
-            <SidebarTrigger />
-            {children}
+            <div className="p-2">{children}</div>
           </main>
         </SidebarProvider>
       </div>
