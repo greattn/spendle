@@ -1,4 +1,5 @@
 import React from "react";
+import { TransactionsTable } from "../molecules/TransactionsTable";
 
 const Transactions: React.FC = () => {
   return (

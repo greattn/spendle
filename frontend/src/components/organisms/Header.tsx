@@ -24,7 +24,7 @@ import { User } from "lucide-react";
 
 const Header: React.FC = () => {
   return (
-    <header className="header flex justify-between items-center h-16 px-4 border-b">
+    <header className="header flex justify-between items-center h-16 px-4">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

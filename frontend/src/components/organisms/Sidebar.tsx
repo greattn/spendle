@@ -1,5 +1,6 @@
-import { Home, HandCoins, Settings } from "lucide-react";
+import { Home, Wallet, ChartNoAxesCombined, Settings } from "lucide-react";
 import Link from "next/link";
+import { AddTransactionDialog } from "../molecules/AddTransactionDialog";
 
 import {
   Sidebar as SidebarUI,
@@ -20,9 +21,14 @@ const items = [
     icon: Home,
   },
   {
-    title: "Transactions",
-    url: "/transactions",
-    icon: HandCoins,
+    title: "Finances",
+    url: "/my-finances",
+    icon: Wallet,
+  },
+  {
+    title: "Statistics",
+    url: "/statistics",
+    icon: ChartNoAxesCombined,
   },
   {
     title: "Settings",
@@ -49,7 +55,10 @@ const Sidebar: React.FC = () => {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                    <Link
+                      href={item.url}
+                      className="transition-all duration-300 hover:scale-105 active:scale-95"
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -59,6 +68,7 @@ const Sidebar: React.FC = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <AddTransactionDialog />
       </SidebarContent>
     </SidebarUI>
   );
