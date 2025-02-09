@@ -1,17 +1,23 @@
 import type { Config } from "tailwindcss";
+import fluid, { extract, screens, fontSize } from "fluid-tailwind";
 
 export default {
   darkMode: ["class"],
-  content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}", // Note the addition of the `app` directory.
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+  content: {
+    files: [
+      "./app/**/*.{js,ts,jsx,tsx,mdx}", // Note the addition of the `app` directory.
+      "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+      "./components/**/*.{js,ts,jsx,tsx,mdx}",
 
-    // Or if using `src` directory:
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+      // Or if using `src` directory:
+      "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    ],
+    extract,
+  },
   theme: {
     extend: {
+      screens,
+      fontSize,
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -71,5 +77,7 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  plugins: [require("tailwindcss-animate"), fluid],
 } satisfies Config;
