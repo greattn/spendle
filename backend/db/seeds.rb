@@ -11,7 +11,7 @@ User.destroy_all
 user = User.create!(
   name: "Trần Thanh Phong",
   email: "phongtlcp@gmail.com",
-  password_digest: BCrypt::Password.create("Aa@123456")
+  password: "Aa@123456"
 )
 
 categories = [

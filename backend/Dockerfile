@@ -63,4 +63,4 @@ COPY . .
 EXPOSE 3000
 
 # Start the Rails server with RVM sourced
-CMD ["/bin/bash", "-l", "-c", "bin/rails server -b 0.0.0.0"]
+# CMD ["/bin/bash", "-l", "-c", "bin/rails server -b 0.0.0.0"]
