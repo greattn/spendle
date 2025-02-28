@@ -1,31 +1,55 @@
 # syntax = docker/dockerfile:1
 
-# This Dockerfile is designed for development. Use with docker-compose or build'n'run by hand:
-# docker build -t my-app-dev .
-# docker run -d -p 3000:3000 --name my-app-dev my-app-dev
+# Use Ubuntu 22.04 as the base image
+FROM ubuntu:22.04
 
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
+# Update package list
+RUN apt-get update -qq
+
+# Install software-properties-common to enable apt-add-repository
+RUN apt-get install -y software-properties-common
+
+# Add RVM PPA and install RVM (https://github.com/rvm/ubuntu_rvm)
+RUN apt-add-repository -y ppa:rael-gc/rvm
+RUN apt-get update
+RUN apt-get install -y rvm
+
+# Source RVM in the shell
+RUN echo 'source "/usr/share/rvm/scripts/rvm"' >> ~/.bashrc
+
+# Install Ruby 3.2.6 and Bundler
 ARG RUBY_VERSION=3.2.6
-FROM docker.io/library/ruby:$RUBY_VERSION AS base
+ENV RUBYGEMS_VERSION=3.4.10
+SHELL ["/bin/bash", "-l", "-c"]
+RUN rvm requirements
+RUN rvm install ${RUBY_VERSION}
+RUN rvm use ${RUBY_VERSION} --default
+RUN gem update --system ${RUBYGEMS_VERSION}
+RUN gem install bundler -N
 
-# Rails app lives here
-WORKDIR /rails
+# Ensure Ruby binaries are in PATH
+ENV PATH="/usr/share/rvm/rubies/ruby-${RUBY_VERSION}/bin:${PATH}"
 
-# Install base packages
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips default-mysql-client && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives \
-    apt-get install libmysqlclient-dev
+# Install additional libraries and dependencies
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y \
+    git-core \
+    curl \
+    nodejs \
+    libjemalloc2 \
+    libvips \
+    default-mysql-client \
+    libmysqlclient-dev \
+    pkg-config
+RUN npm install --global yarn
 
-# Set development environment
+# Set working directory for the Rails app
+WORKDIR /app
+
+# Set development environment variables
 ENV RAILS_ENV="development" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="production"
-
-# Install packages needed to build gems
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential git pkg-config && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./
@@ -35,16 +59,8 @@ RUN bundle install && \
 # Copy application code
 COPY . .
 
-# Install Node.js and Yarn for frontend dependencies
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g yarn
-
-# Set the working directory back to the Rails app
-WORKDIR /rails
-
 # Expose port 3000 for the Rails server
 EXPOSE 3000
 
-# Start the Rails server
-CMD ["bin/rails", "server", "-b", "0.0.0.0"]
+# Start the Rails server with RVM sourced
+CMD ["/bin/bash", "-l", "-c", "bin/rails server -b 0.0.0.0"]
